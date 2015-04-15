@@ -26,12 +26,9 @@
 
 	<? if($result!==false): ?>
 		<? for($i = 0; $i < $count; $i++) :?>
-
 			<? $post = $result->data[$i]; ?>
-
 			<? $caption = (isset($post->caption->text)) ? $post->caption->text : false ;?>
 			<? $likes = (isset($post->likes->count)) ? $post->likes->count : false ;?>
-
 			<? $posts[(int)$post->created_time] = [
 				'content'=>$post->images->standard_resolution->url,
 				'likes'=>$post->likes->count,
@@ -53,27 +50,22 @@
 ?>
 
 	<article class="post-wrap">
-
 		<a href="<?= $post['url'] ?>" target="_blank">
 			<figurestyle="background-image:url('<?= $post['content'] ?>');">
 				<figcaption>
-
 					<? if ($post['likes']): ?>
 						<div class="likes-wrap">
 							<p class="likes-wrap--likes"><?= $post['likes'] ?>
 						</div>
 					<? endif; ?>
-
 					<? if ($post['caption']): ?>
 						<div class="caption-wrap">
 							<p class="post__instagram--caption"><?= substr($post['caption'], 0, 45) ?>...</p>
 						</div>
 					<? endif; ?>
-
 				</figcaption>
 			</figure>
 		</a>
-
 	</article>
 
 		<? } ?>
