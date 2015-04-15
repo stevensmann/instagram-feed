@@ -1,75 +1,62 @@
 
 <section class="instagram">
 
-	<? $posts = [] ?>
-	<?php
-		function fetchData($url){
-			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_URL, $url);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($ch, CURLOPT_TIMEOUT, 20);
+<? $posts = [] ?>
+<?php
+	function fetchData($url){
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 20);
 
-			$result = curl_exec($ch);
+		$result = curl_exec($ch);
 
-			curl_close($ch);
-			return $result;
-		}
+		curl_close($ch);
+		return $result;
+	}
 
-		$accessToken = "XXX";
-		$user = "XXX";
+	$accessToken = "XXX";
+	$user = "XXX";
+	$result = fetchData("https://api.instagram.com/v1/users/" . $user . "/media/recent/?access_token=" . $accessToken);
+	$result = json_decode($result);
+	$count = 10;
+?>
 
+<? try { ?>
 
-		$result = fetchData("https://api.instagram.com/v1/users/" . $user . "/media/recent/?access_token=" . $accessToken);
+	<? if($result!==false): ?>
+		<? for($i = 0; $i < $count; $i++) :?>
 
-		$result = json_decode($result);
+			<? $post = $result->data[$i]; ?>
 
-		$count = 10;
+			<? $caption = (isset($post->caption->text)) ? $post->caption->text : false ;?>
+			<? $likes = (isset($post->likes->count)) ? $post->likes->count : false ;?>
 
-	?>
+			<? $posts[(int)$post->created_time] = [
+				'content'=>$post->images->standard_resolution->url,
+				'likes'=>$post->likes->count,
+				'url'=>$post->link,
+				'caption'=>$caption,
+			] ?>
+		<? endfor; ?>
+	<? endif; ?>
 
-	<? try { ?>
+<? } catch (Exception $e) { ?>
+	<p>Instagram Feed is Down</p>
+<? } ?>
 
-		<? if($result!==false): ?>
-			<? for($i = 0; $i < $count; $i++) :?>
+<?
+	$i = 0;
+	foreach ($posts as $time => $post):
+		$i++;
+		if ($i <= 10) {
+?>
 
-				<? $post = $result->data[$i]; ?>
+	<article class="post-wrap">
 
-				<? $caption = (isset($post->caption->text)) ? $post->caption->text : false ;?>
-				<? $likes = (isset($post->likes->count)) ? $post->likes->count : false ;?>
-
-				<? $posts[(int)$post->created_time] = [
-					'content'=>$post->images->standard_resolution->url,
-					'likes'=>$post->likes->count,
-					'url'=>$post->link,
-					'caption'=>$caption,
-				] ?>
-
-			<? endfor; ?>
-
-		<? endif; ?>
-
-	<? } catch (Exception $e) { ?>
-		<div class="container">
-			<p class="text--center">Instagram Feed is Down</p>
-		</div>
-	<? } ?>
-
-	<?
-		$i = 0;
-		foreach ($posts as $time => $post):
-			$i++;
-			if ($i <= 10) {
-	?>
-
-		<article class="post-wrap">
-
-			<a href="<?= $post['url'] ?>" target="_blank">
-
-				<figure class="post  post__instagram  post--instagram" style="background-image:url('<?= $post['content'] ?>');">
-
-				</figure>
-
-				<figcaption class="post__instagram--footer">
+		<a href="<?= $post['url'] ?>" target="_blank">
+			<figurestyle="background-image:url('<?= $post['content'] ?>');">
+				<figcaption>
 
 					<? if ($post['likes']): ?>
 						<div class="likes-wrap">
@@ -84,10 +71,11 @@
 					<? endif; ?>
 
 				</figcaption>
+			</figure>
+		</a>
 
-			</a>
+	</article>
 
-		</article>
-
-			<? } ?>
-		<? endforeach ?>
+		<? } ?>
+	<? endforeach ?>
+</section>
