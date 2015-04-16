@@ -16,8 +16,8 @@
 	}
 
 	$accessToken = "XXX";
-	$user = "XXX";
-	$result = fetchData("https://api.instagram.com/v1/users/" . $user . "/media/recent/?access_token=" . $accessToken);
+	$userId = "XXX";
+	$result = fetchData("https://api.instagram.com/v1/users/" . $userId . "/media/recent/?access_token=" . $accessToken);
 	$result = json_decode($result);
 	$count = 10;
 ?>
