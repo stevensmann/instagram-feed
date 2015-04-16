@@ -46,25 +46,20 @@
 	$i = 0;
 	foreach ($posts as $time => $post):
 		$i++;
-		if ($i <= 10) {
+		if ($i <= $count) {
 ?>
 
 	<article class="post-wrap">
 		<a href="<?= $post['url'] ?>" target="_blank">
-			<figurestyle="background-image:url('<?= $post['content'] ?>');">
-				<figcaption>
-					<? if ($post['likes']): ?>
-						<div class="likes-wrap">
-							<p class="likes-wrap--likes"><?= $post['likes'] ?>
-						</div>
-					<? endif; ?>
-					<? if ($post['caption']): ?>
-						<div class="caption-wrap">
-							<p class="post__instagram--caption"><?= substr($post['caption'], 0, 45) ?>...</p>
-						</div>
-					<? endif; ?>
-				</figcaption>
-			</figure>
+			<img src="url('<?= $post['content'] ?>')">
+
+			<? if ($post['likes']): ?>
+				<p class="likes-wrap--likes"><?= $post['likes'] ?>
+			<? endif; ?>
+
+			<? if ($post['caption']): ?>
+				<p class="post__instagram--caption"><?= substr($post['caption'], 0, 45) ?>...</p>
+			<? endif; ?>
 		</a>
 	</article>
 
